@@ -1,0 +1,549 @@
+MDScreenManager:
+    Main:
+    Recipe:
+    Brew:
+    CreateRecipe:
+    EditRecipe:
+
+<Main>
+    name: "main"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "BrewIT"
+            left_action_items: [["menu", lambda x: root.open_menu(x)]]
+
+        MDBottomNavigation:
+            id: bottom_navigation
+            MDBottomNavigationItem:
+                name: "Beer"
+                text: "Beer"
+                icon: "beer"
+                ScrollView:
+                    MDGridLayout:
+                        id: container
+                        cols: 2
+                        spacing: "25dp"
+                        padding: "25dp"
+                        adaptive_height: True
+
+            MDBottomNavigationItem:
+                name: "Calculators"
+                text: "Calculators"
+                icon: "calculator"
+                ScrollView:
+                    MDGridLayout:
+                        cols: 1
+                        spacing: "30dp"
+                        padding: "30dp"
+                        adaptive_height: True
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            spacing: "10dp"
+                            padding: "10dp"
+                            line_color: '#ffa500'
+                            radius: 25
+                            adaptive_height: True
+                            MDLabel:
+                                text: "Alcohol By Volume ABV Calculator"
+                                halign: "center"
+                            MDTextField:
+                                id: og_field
+                                hint_text: "Original gravity"
+                                helper_text: "e.g. 1.050"
+                                helper_text_mode: "on_focus"
+                                input_filter: "float"
+                                max_text_length: 5
+                            MDTextField:
+                                id: fg_field
+                                hint_text: "Final gravity"
+                                helper_text: "e.g. 1.010"
+                                helper_text_mode: "on_focus"
+                                input_filter: "float"
+                                max_text_length: 5
+                            MDGridLayout:
+                                cols: 3
+                                spacing: "10dp"
+                                padding: "10dp"
+                                adaptive_height: True
+                                MDRoundFlatButton:
+                                    text: "calculate"
+                                    on_release: root.abv_calc()
+                                MDLabel:
+                                    id: abv_result
+                                    halign: 'center'
+                                MDIconButton:
+                                    icon: "refresh-circle"
+                                    icon_size: "32sp"
+                                    theme_icon_color: "Custom"
+                                    icon_color: app.theme_cls.primary_color
+                                    on_release: root.clear_ABV_fields()
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            spacing: "10dp"
+                            padding: "10dp"
+                            line_color: '#ffa500'
+                            radius: 25
+                            adaptive_height: True
+                            MDLabel:
+                                text: "Carbonation calculator"
+                                halign: "center"
+                            MDTextField:
+                                id: beer_l_field
+                                hint_text: "Amount of beer"
+                                helper_text: "e.g. 20L"
+                                helper_text_mode: "on_focus"
+                                input_filter: "float"
+                            MDTextField:
+                                id: temp_c_field
+                                hint_text: "Beer temp"
+                                helper_text: "e.g. 20"
+                                helper_text_mode: "on_focus"
+                                input_filter: "float"
+                            MDTextField:
+                                id: desiredVols_field
+                                hint_text: "Volumes of CO2"
+                                helper_text: "e.g. 2.5"
+                                helper_text_mode: "on_focus"
+                                input_filter: "float"
+                            MDLabel:
+                                text: "Sugar type:"
+                            MDGridLayout:
+                                cols: 3
+                                spacing: "10dp"
+                                padding: "10dp"
+                                adaptive_height: True
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    adaptive_height: True
+                                    MDCheckbox:
+                                        id: gluc
+                                        group: 'sugar_type'
+                                    MDLabel:
+                                        text: 'Corn sugar'
+                                        halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    adaptive_height: True
+                                    MDCheckbox:
+                                        id: sucrose
+                                        group: 'sugar_type'
+                                    MDLabel:
+                                        text: 'Table sugar'
+                                        halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    adaptive_height: True
+                                    MDCheckbox:
+                                        id: dme
+                                        group: 'sugar_type'
+                                    MDLabel:
+                                        text: 'DME'
+                                        halign: "center"
+                            MDGridLayout:
+                                cols: 3
+                                spacing: "10dp"
+                                padding: "10dp"
+                                adaptive_height: True
+                                MDRoundFlatButton:
+                                    text: "calculate"
+                                    on_release: root.carbonation_calc()
+                                MDLabel:
+                                    id: carbonation_result
+                                    halign: 'center'
+                                MDIconButton:
+                                    size_hint_y: None
+                                    icon: "refresh-circle"
+                                    icon_size: "32sp"
+                                    theme_icon_color: "Custom"
+                                    icon_color: app.theme_cls.primary_color
+                                    on_release: root.clear_carbonation_fields()
+            MDBottomNavigationItem:
+                name: "My Brew"
+                text: "My Brew"
+                icon: "notebook"
+                ScrollView:
+                    MDGridLayout:
+                        id: my_brew_list
+                        cols: 1
+                        spacing: "25dp"
+                        padding: "25dp"
+                        adaptive_height: True
+
+<Recipe>
+    name: "recipe"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Recipe"
+            left_action_items: [["backburger", lambda x: root.back_to_main()]]
+        ScrollView:
+            MDBoxLayout:
+                id: recipe_container
+                adaptive_height: True
+                orientation: 'vertical'
+                spacing: "30dp"
+                padding: "30dp"
+                MDLabel:
+                    id: recipe_name
+                    halign: "center"
+                    font_style: 'H2'
+                    size_hint_y: None
+                Image:
+                    id: image_path
+                    size_hint_y: None
+                    height: '200dp'
+                    width: '200dp'
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: 'vertical'
+                    spacing: "30dp"
+                    padding: "10dp"
+                    MDLabel:
+                        text: "Description:"
+                        font_style: 'H4'
+                    MDLabel:
+                        id: recipe_description
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: 'vertical'
+                    spacing: "30dp"
+                    padding: "10dp"
+                    MDLabel:
+                        text: "Ingredients:"
+                        font_style: 'H4'
+                    MDLabel:
+                        id: recipe_ingredients
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                MDRaisedButton:
+                    text: "Let's brew IT"
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    size_hint: None, None
+                    md_bg_color: '#ffa500'
+                    radius: [25,]
+                    on_release: root.go_to_brew()
+
+<Brew>
+    name: "brew"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            id: brew_name
+            left_action_items: [["backburger", lambda x: root.back_to_main()]]
+        MDGridLayout:
+            cols:1
+            spacing: "30dp"
+            padding: "30dp"
+            MDLabel:
+                id: step_nr
+                halign: "center"
+                font_style: 'H4'
+            MDLabel:
+                id: step_text
+                halign: "center"
+            MDGridLayout:
+                cols:2
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    id: brew_date_container
+                    spacing: "15dp"
+                    padding: "10dp"
+                    opacity: 0
+                    MDLabel:
+                        text: 'Brew date:'
+                        font_style: 'H5'
+                    MDTextField:
+                        id: brew_date
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    id: bottling_date_container
+                    spacing: "15dp"
+                    padding: "10dp"
+                    opacity: 0
+                    MDLabel:
+                        text: 'Bottling date:'
+                        font_style: 'H5'
+                    MDTextField:
+                        id: bottling_date
+            Widget:
+        MDBoxLayout:
+            size_hint_y: None
+            height: "48dp"
+            spacing: "50dp"
+            padding: "50dp"
+            MDFloatingActionButton:
+                id: pre_step
+                icon: "arrow-left"
+                md_bg_color: '#ffa500'
+                halign: "left"
+                type: "large"
+                on_release: root.pre_step()
+            Widget:
+            MDFloatingActionButton:
+                id: next_step
+                icon: "arrow-right"
+                md_bg_color: '#ffa500'
+                halign: "right"
+                type: "large"
+                on_release: root.next_step()
+
+
+<CreateRecipe>
+    name: "create_recipe"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Create a recipe"
+            left_action_items: [["backburger", lambda x: root.back_to_main()]]
+            right_action_items: [["refresh-circle", lambda x: root.clear_fields()]]
+        ScrollView:
+            MDBoxLayout:
+                adaptive_height: True
+                orientation: 'vertical'
+                spacing: "30dp"
+                padding: "30dp"
+                MDTextField:
+                    id: recipe_name
+                    mode: "rectangle"
+                    hint_text: "Recipe name"
+                MDTextField:
+                    id: recipe_description
+                    mode: "rectangle"
+                    hint_text: "Recipe description"
+                    multiline: True
+                MDTextField:
+                    id: ingredients
+                    mode: "rectangle"
+                    hint_text: "Ingredients (each line is a separate ingredient)"
+                    multiline: True
+                MDTextField:
+                    id: steps
+                    mode: "rectangle"
+                    hint_text: "Steps (leave a line of space between each step)"
+                    multiline: True
+                MDLabel:
+                    text: "Select recipe icon:"
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "25dp"
+                    adaptive_height: True
+                    Button:
+                        id: light_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/light_beer.jpg", "light_beer_btn"); print("light_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/light_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Button:
+                        id: amber_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/amber_beer.jpg", "amber_beer_btn"); print("amber_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/amber_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Button:
+                        id: black_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/black_beer.jpg", "black_beer_btn"); print("black_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/black_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                MDLabel:
+                    id: error_label
+                    theme_text_color: "Custom"
+                    text_color: 1, 0, 0, 1
+                    halign: "center"
+                MDBoxLayout:
+                    spacing: "10dp"
+                    padding: "10dp"
+                    adaptive_height: True
+                    MDFillRoundFlatIconButton:
+                        icon: "check"
+                        text: "Save recipe"
+                        on_release: root.save_recipe_as_json(), app.update_main_screen()
+
+<EditRecipe>
+    name: "edit_recipe"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Edit recipe"
+            left_action_items: [["backburger", lambda x: root.back_to_main()]]
+            right_action_items: [["refresh-circle", lambda x: root.clear_fields()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "10dp"
+            line_color: '#ffa500'
+            size_hint: 1, 0.4
+            radius: 0,0,25,25
+            MDTextField:
+                id: search_field
+                hint_text: "Search"
+                on_text: root.search(*args)
+            ScrollView:
+                MDList:
+                    id: search_results
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_height: True
+                spacing: "30dp"
+                padding: "30dp"
+                MDLabel:
+                    text: "Recipe details:"
+                MDTextField:
+                    id: recipe_name
+                    mode: "rectangle"
+                    hint_text: "Recipe name"
+                MDTextField:
+                    id: recipe_description
+                    mode: "rectangle"
+                    hint_text: "Recipe description"
+                    multiline: True
+                MDTextField:
+                    id: ingredients
+                    mode: "rectangle"
+                    hint_text: "Ingredients (each line is a separate ingredient)"
+                    multiline: True
+                MDTextField:
+                    id: steps
+                    mode: "rectangle"
+                    hint_text: "Steps (leave a line of space between each step)"
+                    multiline: True
+                MDLabel:
+                    text: "Select recipe icon:"
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "25dp"
+                    adaptive_height: True
+                    Button:
+                        id: light_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/light_beer.jpg", "light_beer_btn"); print("light_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/light_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Button:
+                        id: amber_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/amber_beer.jpg", "amber_beer_btn"); print("amber_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/amber_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Button:
+                        id: black_beer_btn
+                        size_hint: 1, 1.2
+                        on_release: root.set_image_path("images/black_beer.jpg", "black_beer_btn"); print("black_beer")
+                        background_color: 0,0,0,0
+                        Image:
+                            source: "images/black_beer.jpg"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                MDLabel:
+                    id: error_label
+                    theme_text_color: "Custom"
+                    text_color: 1, 0, 0, 1
+                    halign: "center"
+                MDGridLayout:
+                    cols: 2
+                    spacing: "10dp"
+                    padding: "10dp"
+                    adaptive_height: True
+                    MDFillRoundFlatIconButton:
+                        icon: "content-save"
+                        text: "Overwrite Recipe"
+                        on_release: root.overwrite_recipe(), app.update_main_screen()
+
+                    MDFillRoundFlatIconButton:
+                        icon: "content-save-all"
+                        text: "Save as New Recipe"
+                        on_release: root.save_as_new_recipe(), app.update_main_screen()
+
+<MenuHeader>
+    orientation: "vertical"
+    adaptive_size: True
+    padding: "4dp"
+
+    MDBoxLayout:
+        spacing: "12dp"
+        adaptive_size: True
+
+        MDIconButton:
+            icon: "note-edit-outline"
+            pos_hint: {"center_y": .5}
+
+        MDLabel:
+            text: "Actions"
+            adaptive_size: True
+            pos_hint: {"center_y": .5}
+
+<RecipesItem>
+    radius: 25
+    box_radius: 0,0,25,25
+    height: "200dp"
+    size_hint_y: None
+    minmap: True
+    on_touch_up: root.on_tile_release() if self.collide_point(*args[1].pos) else None
+    MDLabel:
+        id: label
+
+<MyBrewItem>:
+    orientation: 'vertical'
+    spacing: "10dp"
+    padding: "10dp"
+    line_color: '#ffa500'
+    radius: 25
+    adaptive_height: True
+    MDLabel:
+        id: brew_name
+        halign: "center"
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+    MDLabel:
+        id: brew_desc
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+    MDGridLayout:
+        cols: 2
+        spacing: "10dp"
+        padding: "10dp"
+        adaptive_height: True
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: "10dp"
+            padding: "10dp"
+            adaptive_height: True
+            MDLabel:
+                text: "Brew date:"
+            MDLabel:
+                id: brew_date
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: "10dp"
+            padding: "10dp"
+            adaptive_height: True
+            MDLabel:
+                text: "Bottling date:"
+            MDLabel:
+                id: bottling_date
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
